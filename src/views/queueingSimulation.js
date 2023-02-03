@@ -166,7 +166,10 @@ function QueueingSimulation() {
               </Card.Header>
               <Card.Body>
                 <Form>
+
+        
                   {/* /====================ROW 1/ */}
+
 
                   <Row>
                     <Col className="pr-1 typography-line" md="5">
@@ -404,6 +407,7 @@ function QueueingSimulation() {
                       <h1 className="answer-heading">Lq</h1>
                    
                   </Col>
+                  
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
                       <i className="nc-icon nc-single-02 text-warning"></i>

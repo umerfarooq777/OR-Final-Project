@@ -28,7 +28,7 @@ function Header() {
     return "Brand";
   };
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg"> 
       <Container fluid>
         <div className="d-flex justify-content-center align-items-center ml-2 ml-lg-0">
           {/* <Button
