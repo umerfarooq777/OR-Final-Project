@@ -2,7 +2,7 @@ import { mmc_calculation_lq } from "./MMC";
 
 const lq_wq_ggc = (p, lambda, meu, c, interArrivalType, variance_S, variance_A) => {
     const { lq: mmc_lq, wq: mmc_wq } = mmc_calculation_lq(p, lambda, meu, c)
-    if (interArrivalType === "M") {
+    if (interArrivalType === "exponential") {
         let coeff_A = 1
         let coeff_S = variance_S / ((1 / meu) ** 2)
 

@@ -7,7 +7,7 @@ import Icons from "views/Icons.js";
 import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
-import Test from "views/test";
+import RandomNumber from "views/RandomNumber";
 import QueueingSimulation from "views/queueingSimulation.js";
 
 const dashboardRoutes = [
@@ -20,10 +20,10 @@ const dashboardRoutes = [
   //   layout: "/admin"
   // },
   {
-    path: "/test",
-    name: "Test Page",
-    icon: "nc-icon nc-spaceship",
-    component: Test,
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "nc-icon nc-chart-pie-35",
+    component: Dashboard,
     layout: "/admin"
   },
   {
@@ -34,10 +34,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
-    component: Dashboard,
+    path: "/SimulatonOfRandomNumber",
+    name: "Random Number",
+    icon: "nc-icon nc-spaceship",
+    component: RandomNumber,
     layout: "/admin"
   },
   {
