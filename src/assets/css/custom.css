@@ -6,6 +6,14 @@
   border:none;
   border-bottom:2px solid gray;
 }
+.serverInputRan{
+  background:transparent;
+  margin:0 auto;
+  max-width:50%;
+  font-size:130%;
+  border:none;
+  border-bottom:2px solid gray;
+}
 .serverText{
   font-size:1.5em;
   /* background:red; */

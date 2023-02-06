@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ChartistGraph from "react-chartist";
 // react-bootstrap components
 import {
@@ -16,10 +16,285 @@ import {
   Tooltip,
 } from "react-bootstrap";
 
+import serverGif from "assets/img/Server.gif";
+import NotificationAlert from "react-notification-alert";
+
 function RandomNumber() {
+
+  const [server, setServer] = useState(1);
+  const [customers, setCustomers] = useState(5);
+  const [IAMean, setIAMean] = useState("");
+  const [STMean, setSTMean] = useState("");
+
+  // const [LqCal, setLqCal] = useState();
+  // const [WqCal, setWqCal] = useState();
+  // const [WsCal, setWsCal] = useState();
+  // const [LCal, setLCal] = useState();
+  // const [PITCal, setPITCal] = useState();
+
+  function factorialize(num) {
+    var result = num;
+    if (num === 0 || num === 1)
+        return 1;
+    while (num > 1) {
+        num--;
+        result *= num;
+    }
+    return result;
+}
+factorialize(5);
+
+
+//!=================================================Simulation
+
+
+let rows = customers;
+let columns = 8;
+let table = [];
+
+
+const eConts = 2.718281828;
+
+const Column1Cal = (e,minusLambda,lambda,customer)=>{
+  var ans =  ((e**minusLambda)*(lambda)**customer)/factorialize(customer);
+  return ans
+
+}
+
+
+
+  const Calculate1 = (e) => {
+    e.preventDefault();
+    if (IAMean == "" || STMean == "" || customers=='') {
+      notify("tr", "Input fields can't be empty");
+    } 
+    
+    else {
+
+      var lambda = IAMean;
+      var minusLambda = IAMean * -1;
+      var meu = STMean;
+      // console.log(server,customers,IAMean,STMean);
+      let previousValue
+
+      for (let i = 0; i < rows; i++) {
+        table[i] = [];
+
+        //?================================================= Col 1 Calculator Values
+        table[i][0] = Column1Cal(eConts,minusLambda,lambda,i);
+        
+        //?================================================= Col 2 Cummulative Probability
+       if (i==0) {
+        table[i][1] =  table[i][0] ;
+       } else {
+        
+        table[i][1] =  table[i-1][1]+table[i][0] ;
+        //current value = [pre row value + pre col] , [current row value]
+       }
+        //?================================================= Col 3 Lookup Probability
+
+        if (i==0) {
+          table[i][2] = 0 ;
+         } else {
+          
+          table[i][2] =  table[i-1][1] ;
+          //current value = [pre row value + pre col] , [current row value]
+         }
+        //?================================================= Col 4 no b/w arrival
+
+        table[i][3] =  i ;
+
+
+        //?================================================= Col 5 range 1
+                   
+        table[i][4] =  i==0?0:table[i][2]+0.0001;
+         
+
+        //?================================================= Col 6 range 2
+        // table[i][5] = table[i+1][2];
+
+
+        //?================================================= Col 1
+
+
+
+
+
+
+        // for (let j = 0; j < columns; j++) {
+        //   table[i][j] = 0;
+        // }
+      }
+      console.log(table)
+    }
+  };
+
+
+
+//!=================================================notification
+  const notificationAlertRef = React.useRef(null);
+  const notify = (place, msg) => {
+    var options = {};
+    options = {
+      place: place,
+      message: (
+        <div>
+          <div>{msg}</div>
+        </div>
+      ),
+      type: "info",
+      icon: "nc-icon nc-bell-55",
+      autoDismiss: 5,
+    };
+    notificationAlertRef.current.notificationAlert(options);
+  };
+
+
+
   return (
     <>
       <Container fluid>
+
+      <div className="rna-container">
+        <NotificationAlert ref={notificationAlertRef} />
+      </div>
+
+        <Row>
+        <Col md="12">
+            <Card>
+              <Card.Header>
+                {/* <Card.Title as="h4">Queue Configuration:</Card.Title> */}
+              </Card.Header>
+              <Card.Body>
+                <Form>
+                  {/* /====================ROW 1/ */}
+
+                  <Row>
+                    <Col className="pr-1 typography-line" md="2">
+                      <p className="">
+                        {" "}
+                        <i className="nc-icon nc-layers-3 "></i> Server(s)
+                      </p>
+                      <input
+                        type="number"
+                        className="serverInputRan"
+                        min="1"
+                        value={server}
+                        onChange={(e) => {
+                          setServer(e.target.value);
+                        }}
+                      ></input>
+                    </Col>
+                    <Col className="pr-1" md="2">
+                     <p>No of Customers:</p>
+
+                      <Form.Control
+                        placeholder="No of Customers"
+                        type="number"
+                        width="80%"
+                        className="mb-3"
+                        value={customers}
+                        onChange={(e) => {
+                          setCustomers(e.target.value);
+                        }}
+                      ></Form.Control>
+
+                      
+                    </Col>
+                    <Col className="pr-1" md="4">
+                     <p>Mean of Inter Arrival (1/λ) :</p>
+
+                      <Form.Control
+                        placeholder="Mean valueof Inter Arrival (mins)"
+                        type="number"
+                        width="80%"
+                        className="mb-3"
+                        value={IAMean}
+                        onChange={(e) => {
+                          setIAMean(e.target.value);
+                        }}
+                      ></Form.Control>
+
+                      
+                    </Col>
+                   
+                    <Col className="pr-1" md="4">
+                     <p>Mean of Service Time (1/µ) :</p>
+
+                      <Form.Control
+                        placeholder="Mean valueof Service Time (mins)"
+                        type="number"
+                        width="80%"
+                        className="mb-3"
+                        value={STMean}
+                        onChange={(e) => {
+                          setSTMean(e.target.value);
+                        }}
+                      ></Form.Control>
+
+                      
+                    </Col>
+
+                    {/* <Col className="px-1" md="7">
+                      <Row>
+                        <Col className="px-1" md="5"></Col>
+                        <Col md="7">
+                          <div>
+                            <img src={serverGif} />
+                          </div>
+                        </Col>
+                        
+                      </Row>
+                    </Col> */}
+                  </Row>
+                  {/* /====================ROW 2/ */}
+                  
+                  <Row>
+                    <Col className="pl-1" md="4"></Col>
+                    <Col className="pl-1" md="4">
+
+                      {
+                        IAMean == "" || STMean == "" || customers==''?
+                        <Button
+                        className="btn-fill pull-right"
+                        type="submit"
+                        variant="info"
+                        disabled
+                        
+                      >
+                        Simulate
+                      </Button>
+                        :
+                        <Button
+                        className="btn-fill pull-right"
+                        type="submit"
+                        variant="info"
+                        onClick={(e) => {
+                          Calculate1(e);
+                        }}
+                        
+                      >
+                        Simulate
+                      </Button>
+
+                      }
+                    
+
+                     
+                    </Col>
+                    <Col className="pl-1" md="4">
+                     
+                    </Col>
+                  </Row>
+
+                  {/* <Button block onClick={() => notify("tr","poka")} variant="default">
+                    Top Right
+                  </Button> */}
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
 
 
 

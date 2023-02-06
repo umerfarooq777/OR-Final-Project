@@ -143,7 +143,8 @@ function QueueingSimulation() {
       P = lambda / meu;
       // console.log("🚀 ~ file: queueingSimulation.js:125 ~ Calculate2 ~ P", P,STVarianceCal)
 
-      //==============================================Lq
+      if (server==1) {
+         //==============================================Lq
 
       Lq = (lambda ** 2 * STVarianceCal + P ** 2) / (2 * (1 - P));
       // console.log("🚀 ~ file: queueingSimulation.js:63 ~ Calculate1 ~ Lq", Lq)
@@ -166,6 +167,28 @@ function QueueingSimulation() {
       PIT = 1 - P;
       // console.log("🚀 ~ file: queueingSimulation.js:75 ~ Calculate1 ~ Ws", Ws)
       setPITCal(parseFloat(PIT.toFixed(4)));
+        
+      } else {
+        
+      }
+
+      var ans = ggc_calculation(
+        P,
+        lambda,
+        meu,
+        server,
+        IAType,
+        STVarianceCal,
+        IAVarianceCal
+      );
+      setLqCal(ans.lq.toFixed(4));
+      setWqCal(ans.wq.toFixed(4));
+      setWsCal(ans.w.toFixed(4));
+      setLCal(ans.l.toFixed(4));
+      setPITCal(ans.idle.toFixed(4));
+
+
+     
     }
   };
 
