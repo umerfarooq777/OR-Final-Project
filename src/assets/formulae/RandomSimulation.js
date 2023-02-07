@@ -1,74 +1,86 @@
-function factorialize(num) {
-    var result = num;
-    if (num === 0 || num === 1)
-        return 1;
-    while (num > 1) {
-        num--;
-        result *= num;
+
+
+
+
+
+
+
+
+
+//!=========================================
+function generateRandomExponential(u) {
+  return Math.floor(u * Math.log(Math.random()) * -1);
+}
+
+const calculateArrivalsFromInterArrivals = (interArrivals) => {
+  const arrivals = [];
+  for (let i = 0; i < interArrivals.length; i++) {
+    if (i === 0) {
+      arrivals.push(interArrivals[i]);
+    } else {
+      arrivals.push(arrivals[i - 1] + interArrivals[i]);
     }
-    return result;
-}
-factorialize(5);
+  }
+  return arrivals;
+};
 
-const calc_P0 = (p, c) => {
-    let summation_value = 0;
-    for (let m = 0; m < c; m++) {
-        summation_value += (((c * p) ** m) / factorialize(m))
+export const generate = (interArrivals, serviceTimes, numberOfServers) => {
+  const arrivals = calculateArrivalsFromInterArrivals(interArrivals);
+//   console.log(numberOfServers);
+  var servers = []
+
+  for(var i = 0; i < numberOfServers; i++) {
+    servers.push(0);
+}
+
+//   console.log(servers)
+  const customers = [];
+  let serverNum = 0;
+
+  for (let i = 0; i < arrivals.length; i++) {
+
+
+    for (var index = 0; index < servers.length; index++) {
+      if (servers[index] > servers[index + 1]) {
+        serverNum = index + 1;
+      }
     }
+    // [0,0]
+    let startTime = arrivals[i] < servers[serverNum] ? servers[serverNum] : arrivals[i];
+    let endTime = startTime + serviceTimes[i];
+    let arrival = arrivals[i];
+    let waitTime = startTime - arrival;
+    let turnaroundTime = endTime - arrival;
+    let obj = {
+      arrival,
+      interArrival: interArrivals[i],
+      serviceTime: serviceTimes[i],
+      server: serverNum + 1,
+      startTime,
+      endTime,
+      waitTime,
+      turnaroundTime,
+    };
+    servers[serverNum] += serviceTimes[i];
+    customers.push(obj);
+  }
+//   setServerData(serverData)
+  return {customers,servers};
+};
 
-    let p0 = 1 / (summation_value + (((c * p) ** c) / (factorialize(c) * (1 - p))))
+// THis is your entry function
+const generateArrivals = () => {
+  // / Inputs
+  const MeanInterArival = 4.75;
+  const MeanServiceTime = 5.4;
 
-    return p0;
-}
+  const serviceTimes = [];
+  const interArrivals = [];
+  for (let i = 0; i < numberOfCustomers; i++) {
+    interArrivals.push(generateRandomExponential(MeanInterArival));
+    serviceTimes.push(generateRandomExponential(MeanServiceTime));
+  }
 
-const lq_mmc = (rho, lambda, meu, p0, c) => {
-    let lq = (p0 * ((lambda / meu) ** c) * rho) / (factorialize(c) * ((1 - rho) ** 2))
-    return lq;
-}
-
-const calc_Wq = (lq, lambda) => {
-    let wq = lq / lambda;
-    return wq;
-}
-
-const calc_W = (wq, meu) => {
-    let w = wq + (1 / meu);
-    return w;
-}
-
-const calc_L = (w, lambda) => {
-    let l = lambda * w;
-    return l;
-}
-
-const calc_idle = (rho) => {
-    let idle = 1 - rho;
-    return idle;
-}
-
-export const mmc_calculation = (p, lambda, meu, c) => {
-    let p0 = calc_P0(p, c)
-    let lq = lq_mmc(p, lambda, meu, p0, c);
-    let wq = calc_Wq(lq, lambda)
-    let w = calc_W(wq, meu)
-    let l = calc_L(w, lambda)
-    let idle = calc_idle(p)
-
-    return {
-        lq,
-        wq,
-        w,
-        l,
-        idle,
-    }
-}
-export const mmc_calculation_lq = (p, lambda, meu, c) => {
-    let p0 = calc_P0(p, c)
-    let lq = lq_mmc(p, lambda, meu, p0, c);
-    let wq = calc_Wq(lq, lambda)
-
-    return {
-        lq,
-        wq,
-    }
-}
+  interArrivals[0] = 0;
+  generate(interArrivals, serviceTimes);
+};

@@ -18,6 +18,8 @@ import {
 
 import serverGif from "assets/img/Server.gif";
 import NotificationAlert from "react-notification-alert";
+import { generate } from "assets/formulae/RandomSimulation";
+import { serverDataExport } from "assets/formulae/RandomSimulation";
 
 // function TableRow(props) {
 //   // console.log(props.obj)
@@ -37,9 +39,15 @@ function RandomNumber() {
   const [customers, setCustomers] = useState(5);
   const [IAMean, setIAMean] = useState("");
   const [STMean, setSTMean] = useState("");
-
+  
+  const [IAArray, setIAArray] = useState([]);
+  // console.log("🚀 ~ file: RandomNumber.js:42 ~ RandomNumber ~ IAArray", IAArray)
+  const [STArray, setSTArray] = useState([]);
+  // console.log("🚀 ~ file: RandomNumber.js:44 ~ RandomNumber ~ STArray", STArray)
 
   const [final, setFinal] = useState([]);
+  // console.log("🚀 ~ file: RandomNumber.js:48 ~ RandomNumber ~ final", final)
+  const [serverData, setServerData] = useState([]);
 
   let rows = customers;
   let columns = 9;
@@ -87,12 +95,16 @@ function RandomNumber() {
     e.preventDefault();
     if (IAMean == "" || STMean == "" || customers == "") {
       notify("tr", "Input fields can't be empty");
+    } if (IAMean<0 || STMean <0 ) {
+      notify("tr", "Please, enter value greater than zero");
     } else {
       var lambda = IAMean;
       var minusLambda = IAMean * -1;
       var meu = STMean;
       // console.log(server,customers,IAMean,STMean);
-      let previousValue;
+
+      setIAArray([])
+      setSTArray([])
 
       for (let i = 0; i < rows; i++) {
         table[i] = [];
@@ -133,6 +145,7 @@ function RandomNumber() {
         //?================================================= Col 7 Inter Arrival
 
         table[i][6] = Math.floor(generate_IA(rows));
+        IAArray.push(table[i][6])
 
         //?================================================= Col 8 Arrival
         if (i == 0) {
@@ -143,13 +156,18 @@ function RandomNumber() {
 
         //?================================================= Col 9 Service Time
         table[i][8] = generate_ST(meu);
-
+        STArray.push(table[i][8])
         // for (let j = 0; j < columns; j++) {
         //   table[i][j] = 0;
         // }
       }
       // console.log(table)
-      setFinal(table)
+      var ans = generate(IAArray,STArray,server);
+      setFinal(ans.customers)
+      setServerData(ans.servers)
+      // console.log(ans.servers.reduce((a, b) => a + b, 0),STArray.reduce((a, b) => a + b, 0)) ;
+      // console.log(ans.servers.reduce((a, b) => a + b, 0),STArray.reduce((a, b) => a + b, 0)) ;
+
     }
   };
 
@@ -227,6 +245,7 @@ function RandomNumber() {
                         width="80%"
                         className="mb-3"
                         value={IAMean}
+                        // minvalue="0"
                         onChange={(e) => {
                           setIAMean(e.target.value);
                         }}
@@ -242,6 +261,7 @@ function RandomNumber() {
                         width="80%"
                         className="mb-3"
                         value={STMean}
+                        // minvalue="0"
                         onChange={(e) => {
                           setSTMean(e.target.value);
                         }}
@@ -298,6 +318,111 @@ function RandomNumber() {
             </Card>
           </Col>
         </Row>
+
+        <Row>
+          <Col md="8">
+            <Card>
+              <Card.Header>
+                <Card.Title as="h4">Users Behavior</Card.Title>
+                <p className="card-category">24 Hours performance</p>
+              </Card.Header>
+              <Card.Body>
+                <div className="ct-chart" id="chartHours">
+                  <ChartistGraph
+                    data={{
+                      labels: [
+                        "9:00AM",
+                        "12:00AM",
+                        "3:00PM",
+                        "6:00PM",
+                        "9:00PM",
+                        "12:00PM",
+                        "3:00AM",
+                        "6:00AM",
+                      ],
+                      series: table,
+                    }}
+                    type="Line"
+                    options={{
+                      low: 0,
+                      high: 800,
+                      showArea: false,
+                      height: "245px",
+                      axisX: {
+                        showGrid: false,
+                      },
+                      lineSmooth: true,
+                      showLine: true,
+                      showPoint: true,
+                      fullWidth: true,
+                      chartPadding: {
+                        right: 50,
+                      },
+                    }}
+                    responsiveOptions={[
+                      [
+                        "screen and (max-width: 640px)",
+                        {
+                          axisX: {
+                            labelInterpolationFnc: function (value) {
+                              return value[0];
+                            },
+                          },
+                        },
+                      ],
+                    ]}
+                  />
+                </div>
+              </Card.Body>
+              <Card.Footer>
+                <div className="legend">
+                  <i className="fas fa-circle text-info"></i>
+                  Open <i className="fas fa-circle text-danger"></i>
+                  Click <i className="fas fa-circle text-warning"></i>
+                  Click Second Time
+                </div>
+                <hr></hr>
+                <div className="stats">
+                  <i className="fas fa-history"></i>
+                  Updated 3 minutes ago
+                </div>
+              </Card.Footer>
+            </Card>
+          </Col>
+          <Col md="4">
+            <Card>
+              <Card.Header>
+                <Card.Title as="h4">Server(s) Statistics</Card.Title>
+                <p className="card-category">Server Performance(s)</p>
+              </Card.Header>
+              <Card.Body>
+                <div
+                  className="ct-chart ct-perfect-fourth"
+                  id="chartPreferences"
+                >
+                  <ChartistGraph
+                    data={{
+                      labels: ["40%", "20%", "40%"],
+                      series: [40, 20, 40],
+                    }}
+                    type="Pie"
+                  />
+                </div>
+                <div className="legend">
+                  <i className="fas fa-circle text-info"></i>Open<br/>
+                  <i className="fas fa-circle text-danger"></i>Bounce<br/>
+                   <i className="fas fa-circle text-warning"></i>Unsubscribe<br/>
+                </div>
+                {/* <hr></hr> */}
+                {/* <div className="stats">
+                  <i className="far fa-clock"></i>
+                  Campaign sent 2 days ago
+                </div> */}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
         <Row>
           <Col md="12">
             <Card className="card-plain table-plain-bg">
@@ -313,37 +438,30 @@ function RandomNumber() {
                 <Table className="table-hover">
                   <thead>
                     <tr>
-                      <th className="border-0">S.no</th>
+                      <th className="border-0">ID</th>
                       <th className="border-0">Inter Arrival</th>
-                      <th className="border-0">Customer Arrival</th>
-                      <th className="border-0">Customer Service Time</th>
+                      <th className="border-0">Arrival</th>
+                      <th className="border-0">Service Time</th>
+                      <th className="border-0">Start Time</th>
+                      <th className="border-0">End Time</th>
+                      <th className="border-0">Turnaround Time</th>
+                      <th className="border-0">Wait Time</th>
+                      <th className="border-0">Server no</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {final.map((subArray, i) => (
-                      <tr key={i}>
-                        <td>{i+1}</td>  
-                        {subArray.map((x, j) => 
-                        
+                    {final.map((obj, key) => (
+                      <tr key={key}>
+                        <td>C{key+1}</td>
+                        <td>{obj.interArrival}</td>
+                        <td>{obj.arrival}</td>
+                        <td>{obj.serviceTime}</td>
+                        <td>{obj.startTime}</td>
+                        <td>{obj.endTime}</td>
+                        <td>{obj.turnaroundTime}</td>
+                        <td>{obj.waitTime}</td>
+                        <td>{obj.server}</td>
 
-
-                        // {if(j>=6||j<=8) {
-                        //   <td key={j}>{x}</td>  
-                        // } else {
-                        //   <td key={j}>{x}</td>  
-                        // }}
-                        
-                       { if(j>=6&&j<=8) {
-                          return <td key={j}>{x}</td>    
-                          
-                        } else {
-                          return null
-                        }}
-                                    
-                                                     
-                        
-                        
-                        )}
                       </tr>
                     ))}
 
