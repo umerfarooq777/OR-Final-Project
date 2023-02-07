@@ -2955,7 +2955,7 @@ body > .navbar-collapse[data-color="purple"]:after {
   .btn.dropdown-toggle {
     margin-bottom: 0; }
   .media-post .author {
-    width: 20%;
+    width: 15%;
     float: none !important;
     display: block;
     margin: 0 auto 10px; }

@@ -9,6 +9,7 @@ import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
 import RandomNumber from "views/RandomNumber";
 import QueueingSimulation from "views/queueingSimulation.js";
+import Team from "views/Team";
 
 const dashboardRoutes = [
   // {
@@ -41,10 +42,10 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/user",
-    name: "User Profile",
+    path: "/team",
+    name: "Team Profile",
     icon: "nc-icon nc-circle-09",
-    component: UserProfile,
+    component: Team,
     layout: "/admin"
   },
   {

@@ -35,19 +35,41 @@ import { serverDataExport } from "assets/formulae/RandomSimulation";
 // }
 
 function RandomNumber() {
-  const [server, setServer] = useState(1);
-  const [customers, setCustomers] = useState(5);
-  const [IAMean, setIAMean] = useState("");
-  const [STMean, setSTMean] = useState("");
+  const [server, setServer] = useState(4);
+  const [customers, setCustomers] = useState(10);
+  const [IAMean, setIAMean] = useState(2.65);
+  const [STMean, setSTMean] = useState(12.45);
+
+  const [ShowTable, setShowTable] = useState(false);
   
+  const [CustomerIDArray, setCustomerIDArray] = useState([]);
+
   const [IAArray, setIAArray] = useState([]);
   // console.log("🚀 ~ file: RandomNumber.js:42 ~ RandomNumber ~ IAArray", IAArray)
+  const [STArrayIN, setSTArrayIN] = useState([]);
   const [STArray, setSTArray] = useState([]);
   // console.log("🚀 ~ file: RandomNumber.js:44 ~ RandomNumber ~ STArray", STArray)
+  const [TAArray, setTAArray] = useState([]);
+  // console.log("🚀 ~ file: RandomNumber.js:50 ~ RandomNumber ~ TAArray", TAArray)
+  const [WTArray, setWTArray] = useState([]);
+  // console.log("🚀 ~ file: RandomNumber.js:52 ~ RandomNumber ~ WTArray", WTArray)
 
   const [final, setFinal] = useState([]);
   // console.log("🚀 ~ file: RandomNumber.js:48 ~ RandomNumber ~ final", final)
   const [serverData, setServerData] = useState([]);
+
+  const [serverLabelMain, setServerLabelMain] = useState([]);
+  const [serverPartsMain, setServerPartsMain] = useState([]);
+  
+  var customerLabel = []
+  
+  var serverLabel = []
+  var serverParts = []
+
+  var TAT = []
+  var ST = []
+  var WT = []
+
 
   let rows = customers;
   let columns = 9;
@@ -91,6 +113,11 @@ function RandomNumber() {
     return ST;
   };
 
+  const ShowTableToggle = (e) => {
+    e.preventDefault();
+    setShowTable(!ShowTable)
+  }
+
   const Calculate1 = (e) => {
     e.preventDefault();
     if (IAMean == "" || STMean == "" || customers == "") {
@@ -106,7 +133,12 @@ function RandomNumber() {
       setIAArray([])
       setSTArray([])
 
+      setTAArray([])
+      setWTArray([])
+
+
       for (let i = 0; i < rows; i++) {
+        customerLabel.push(`C${i+1}`)
         table[i] = [];
 
         //?================================================= Col 1 Calculator Values
@@ -156,17 +188,49 @@ function RandomNumber() {
 
         //?================================================= Col 9 Service Time
         table[i][8] = generate_ST(meu);
-        STArray.push(table[i][8])
+        STArrayIN.push(table[i][8])
         // for (let j = 0; j < columns; j++) {
         //   table[i][j] = 0;
         // }
       }
       // console.log(table)
-      var ans = generate(IAArray,STArray,server);
+      var ans = generate(IAArray,STArrayIN,server);
       setFinal(ans.customers)
+      
+      for (let index = 0; index < ans.customers.length; index++) {
+        TAT.push(ans.customers[index].turnaroundTime+1)
+        ST.push(ans.customers[index].serviceTime-0.5)
+        
+      WT.push(ans.customers[index].waitTime)
+        
+      }
+      
       setServerData(ans.servers)
+      // console.log("=================================")
+      // console.log(ans.servers)
+
+      for (let index = 0; index < ans.servers.length; index++) {
+
+        let percentage = ans.servers[index]/ans.servers.reduce((a, b) => a + b, 0)*100;
+        serverLabel.push(`Server ${ans.servers.length-index}==> ( `+percentage.toFixed(2)+"% )")
+
+        serverParts.push(Number(percentage.toFixed(2)));
+        
+      }
+
+      
+      // console.log(serverLabel)
+      // console.log(serverParts)
+      // console.log(ans.servers.reduce((a, b) => a + b, 0))
       // console.log(ans.servers.reduce((a, b) => a + b, 0),STArray.reduce((a, b) => a + b, 0)) ;
       // console.log(ans.servers.reduce((a, b) => a + b, 0),STArray.reduce((a, b) => a + b, 0)) ;
+
+      setServerLabelMain(serverLabel)
+      setServerPartsMain(serverParts)
+      setCustomerIDArray(customerLabel)
+      setTAArray(TAT)
+      setSTArray(ST)
+      setWTArray(WT)
 
     }
   };
@@ -188,6 +252,9 @@ function RandomNumber() {
     };
     notificationAlertRef.current.notificationAlert(options);
   };
+
+
+ 
 
   return (
     <>
@@ -294,7 +361,7 @@ function RandomNumber() {
                         >
                           Simulate
                         </Button>
-                      ) : (
+                      ) : (<>
                         <Button
                           className="btn-fill pull-right"
                           type="submit"
@@ -305,9 +372,20 @@ function RandomNumber() {
                         >
                           Simulate
                         </Button>
+                       
+                        </>
                       )}
                     </Col>
-                    <Col className="pl-1" md="4"></Col>
+                    <Col className="pl-1" md="4"> <Button
+                          className="btn-fill pull-right ml-4"
+                          type="button"
+                          variant="info"
+                          onClick={(e) => {
+                            ShowTableToggle(e)
+                          }}
+                        >
+                          {ShowTable?"Hide Table":"Show Table"}
+                        </Button></Col>
                   </Row>
 
                   {/* <Button block onClick={() => notify("tr","poka")} variant="default">
@@ -319,33 +397,106 @@ function RandomNumber() {
           </Col>
         </Row>
 
-        <Row>
-          <Col md="8">
+      {
+        ShowTable? <Row>
+        <Col md="12">
+          <Card className="card-plain table-plain-bg">
+            <Card.Header>
+              <Card.Title as="h4">
+                Random Customer Arrival Simulation:
+              </Card.Title>
+              {/* <p className="card-category">
+                Here is a subtitle for this table
+              </p> */}
+            </Card.Header>
+            <Card.Body className="table-full-width table-responsive px-0">
+              <Table className="table-hover">
+                <thead>
+                  <tr>
+                    <th className="border-0">ID</th>
+                    <th className="border-0">Inter Arrival</th>
+                    <th className="border-0">Arrival</th>
+                    <th className="border-0">Service Time</th>
+                    <th className="border-0">Start Time</th>
+                    <th className="border-0">End Time</th>
+                    <th className="border-0">Turnaround Time</th>
+                    <th className="border-0">Wait Time</th>
+                    <th className="border-0">Server no</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {final.map((obj, key) => (
+                    <tr key={key}>
+                      <td>C{key+1}</td>
+                      <td>{obj.interArrival}</td>
+                      <td>{obj.arrival}</td>
+                      <td>{obj.serviceTime}</td>
+                      <td>{obj.startTime}</td>
+                      <td>{obj.endTime}</td>
+                      <td>{obj.turnaroundTime}</td>
+                      <td>{obj.waitTime}</td>
+                      <td>{obj.server}</td>
+
+                    </tr>
+                  ))}
+
+                  {/* {table.map((object, i) => 
+                <TableRow obj={object} key={i} />
+                )} */}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>:null
+      }
+       
+
+        {
+          final&&final.length>0?
+          <Row>
+          <Col md="9">
             <Card>
               <Card.Header>
-                <Card.Title as="h4">Users Behavior</Card.Title>
-                <p className="card-category">24 Hours performance</p>
+                <Card.Title as="h4">Customer Data Analytics :</Card.Title>
+                <p className="card-category">Queue Behaviour</p>
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
-                  <ChartistGraph
+
+                  {
+                    CustomerIDArray&&CustomerIDArray.length>0?
+                    <ChartistGraph
                     data={{
-                      labels: [
-                        "9:00AM",
-                        "12:00AM",
-                        "3:00PM",
-                        "6:00PM",
-                        "9:00PM",
-                        "12:00PM",
-                        "3:00AM",
-                        "6:00AM",
+                      labels:CustomerIDArray
+                      
+                      // [
+                      //   "9:00AM",
+                      //   "12:00AM",
+                      //   "3:00PM",
+                      //   "6:00PM",
+                      //   "9:00PM",
+                      //   "12:00PM",
+                      //   "3:00AM",
+                      //   "6:00AM",
+                      // ]
+                      
+                      ,
+                      series: [
+
+                        TAArray,
+                        STArray,
+                        WTArray,
+
+                        // [787, 385, 490, 492, 554, 586, 698, 695],
+                        // [67, 152, 143, 240, 287, 335, 435, 437],
+                        // [23, 113, 67, 108, 190, 239, 307, 308],
                       ],
-                      series: table,
                     }}
                     type="Line"
                     options={{
                       low: 0,
-                      high: 800,
+                      high: serverPartsMain.reduce((a, b) => a + b, 0),
                       showArea: false,
                       height: "245px",
                       axisX: {
@@ -372,24 +523,29 @@ function RandomNumber() {
                       ],
                     ]}
                   />
+                    :null
+                  }
+                  
                 </div>
               </Card.Body>
               <Card.Footer>
                 <div className="legend">
                   <i className="fas fa-circle text-info"></i>
-                  Open <i className="fas fa-circle text-danger"></i>
-                  Click <i className="fas fa-circle text-warning"></i>
-                  Click Second Time
+                  Turnaround Time <i className="fas fa-circle text-danger"></i>
+                  Service time <i className="fas fa-circle text-warning"></i>
+                  Wait Time
                 </div>
-                <hr></hr>
+                {/* <hr></hr>
                 <div className="stats">
                   <i className="fas fa-history"></i>
                   Updated 3 minutes ago
-                </div>
+                </div> */}
               </Card.Footer>
             </Card>
           </Col>
-          <Col md="4">
+
+
+          <Col md="3">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Server(s) Statistics</Card.Title>
@@ -400,18 +556,32 @@ function RandomNumber() {
                   className="ct-chart ct-perfect-fourth"
                   id="chartPreferences"
                 >
-                  <ChartistGraph
+                  {
+                    serverPartsMain&&serverPartsMain.length>0?
+                    // <p>{serverParts}</p>
+                    <ChartistGraph
                     data={{
-                      labels: ["40%", "20%", "40%"],
-                      series: [40, 20, 40],
+                      labels: serverPartsMain,
+                      series: serverPartsMain,
                     }}
                     type="Pie"
                   />
+
+                    :null
+                  }
+                  
                 </div>
                 <div className="legend">
-                  <i className="fas fa-circle text-info"></i>Open<br/>
+
+                {serverLabelMain.map((obj, key) => (
+
+                  <>
+                  <i className="fas fa-circle" key={key}></i> {obj}<br/>
+                  </>
+                ))}
+                  {/* <i className="fas fa-circle text-info"></i>Open<br/>
                   <i className="fas fa-circle text-danger"></i>Bounce<br/>
-                   <i className="fas fa-circle text-warning"></i>Unsubscribe<br/>
+                   <i className="fas fa-circle text-warning"></i>Unsubscribe<br/> */}
                 </div>
                 {/* <hr></hr> */}
                 {/* <div className="stats">
@@ -423,57 +593,13 @@ function RandomNumber() {
           </Col>
         </Row>
 
-        <Row>
-          <Col md="12">
-            <Card className="card-plain table-plain-bg">
-              <Card.Header>
-                <Card.Title as="h4">
-                  Random Customer Arrival Simulation:
-                </Card.Title>
-                {/* <p className="card-category">
-                  Here is a subtitle for this table
-                </p> */}
-              </Card.Header>
-              <Card.Body className="table-full-width table-responsive px-0">
-                <Table className="table-hover">
-                  <thead>
-                    <tr>
-                      <th className="border-0">ID</th>
-                      <th className="border-0">Inter Arrival</th>
-                      <th className="border-0">Arrival</th>
-                      <th className="border-0">Service Time</th>
-                      <th className="border-0">Start Time</th>
-                      <th className="border-0">End Time</th>
-                      <th className="border-0">Turnaround Time</th>
-                      <th className="border-0">Wait Time</th>
-                      <th className="border-0">Server no</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {final.map((obj, key) => (
-                      <tr key={key}>
-                        <td>C{key+1}</td>
-                        <td>{obj.interArrival}</td>
-                        <td>{obj.arrival}</td>
-                        <td>{obj.serviceTime}</td>
-                        <td>{obj.startTime}</td>
-                        <td>{obj.endTime}</td>
-                        <td>{obj.turnaroundTime}</td>
-                        <td>{obj.waitTime}</td>
-                        <td>{obj.server}</td>
+          :
+          null
+        }
 
-                      </tr>
-                    ))}
+        
 
-                    {/* {table.map((object, i) => 
-                  <TableRow obj={object} key={i} />
-                  )} */}
-                  </tbody>
-                </Table>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+        
 
         
       </Container>

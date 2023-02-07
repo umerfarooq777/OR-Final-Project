@@ -196,11 +196,11 @@
 
 .card-user{
     .card-image{
-        height: 110px;
+        height: 100px;
     }
     .card-image-plain{
         height: 0;
-        margin-top: 110px;
+        margin-top: 100px;
     }
     .author{
         text-align: center;
@@ -208,21 +208,21 @@
         margin-top: -70px;
     }
     .avatar{
-        width: 124px;
-        height: 124px;
-        border: 5px solid #FFFFFF;
+        width: 100px;
+        height: 100px;
+        border: 5px solid #1dc7ea;
         position: relative;
         margin-bottom: 15px;
 
         &.border-gray{
-            border-color: #EEEEEE;
+            border-color: #1dc7ea;
         }
     }
     .title{
         line-height: 24px;
     }
     .card-body{
-        min-height: 240px;
+        min-height: 100px;
     }
 }
 
