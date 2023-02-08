@@ -1,5 +1,6 @@
  
 import Dashboard from "views/Dashboard.js";
+import Introduction from "views/Introduction.js";
 import UserProfile from "views/UserProfile.js";
 import TableList from "views/TableList.js";
 import Typography from "views/Typography.js";
@@ -8,6 +9,7 @@ import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
 import RandomNumber from "views/RandomNumber";
+import DataSource from "views/DataSource";
 import QueueingSimulation from "views/queueingSimulation.js";
 import Team from "views/Team";
 
@@ -21,10 +23,10 @@ const dashboardRoutes = [
   //   layout: "/admin"
   // },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
-    component: Dashboard,
+    path: "/introduction",
+    name: "Introduction",
+    icon: "nc-icon nc-bank",
+    component: Introduction,
     layout: "/admin"
   },
   {
@@ -37,8 +39,15 @@ const dashboardRoutes = [
   {
     path: "/SimulatonOfRandomNumber",
     name: "Random Number",
-    icon: "nc-icon nc-spaceship",
+    icon: "nc-icon nc-atom",
     component: RandomNumber,
+    layout: "/admin"
+  },
+  {
+    path: "/dataSource",
+    name: "Data Source",
+    icon: "nc-icon nc-notes",
+    component: DataSource,
     layout: "/admin"
   },
   {
@@ -46,6 +55,13 @@ const dashboardRoutes = [
     name: "Team Profile",
     icon: "nc-icon nc-circle-09",
     component: Team,
+    layout: "/admin"
+  },
+  {
+    path: "/UserProfile",
+    name: "UserProfile Profile",
+    icon: "nc-icon nc-circle-09",
+    component: UserProfile,
     layout: "/admin"
   },
   {
