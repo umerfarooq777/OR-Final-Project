@@ -52,7 +52,7 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/faces/face-8.jpg")}
                     ></img>
                     <h5 className="title">Umer Farooq</h5>
                   </a>
@@ -259,7 +259,9 @@ function Team() {
                 </Button>
               </div>
             </Card>
-          </Col> <Col md="4">
+          </Col> 
+          
+          <Col md="4">
             <Card className="card-user">
               <div className="card-image">
                 <img

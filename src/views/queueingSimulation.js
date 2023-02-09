@@ -87,6 +87,8 @@ function QueueingSimulation() {
     e.preventDefault();
     if (IAMean == "" || STMean == "") {
       notify("tr", "Input fields can't be empty");
+    } else if (IAMean<0 || STMean <0 ||server<0) {
+      notify("tr", "Please, enter value greater than zero");
     } else {
       var lambda = 1 / IAMean;
       var meu = 1 / STMean;
@@ -132,11 +134,16 @@ function QueueingSimulation() {
     if (
       IAMean == "" ||
       STMean == "" ||
+      // STVarianceCal == "" ||
+      STVarianceCal>0?null:
+      (STVariance==""||
       STVarianceMax == "" ||
-      STVarianceMin == ""
+      STVarianceMin == "")
     ) {
-      notify("tr", "Input fields can't be empty");
-    } else {
+      notify("tr", "Input fields can't be empty or less than 0");
+    }else if (IAMean<0 || STMean <0 ||server<0 || STVariance<0) {
+      notify("tr", "Please, enter value greater than zero");
+    }  else {
       var lambda = 1 / IAMean;
       var meu = 1 / STMean;
 
@@ -209,7 +216,9 @@ function QueueingSimulation() {
       STVarianceMin == "")
     ) {
       notify("tr", "Input fields can't be empty");
-    } else {
+    }else if (IAMean<0 || STMean <0 ||server<0 || STVariance<0 || IAVariance<0) {
+      notify("tr", "Please, enter value greater than zero");
+    }  else {
       var lambda = 1 / IAMean;
       var meu = 1 / STMean;
 
@@ -541,9 +550,10 @@ function QueueingSimulation() {
                     </Col>{" "}
                     <Col className="pl-1" md="1"></Col>
                   </Row>
+
                   <Row>
                     <Col className="pl-1" md="4"></Col>
-                    <Col className="pl-1" md="4">
+                    <Col className="pl-1" md="8">
                       {IAType == "" || STType == "" ? (
                         <Button
                           className="btn-fill pull-right"
@@ -624,10 +634,11 @@ function QueueingSimulation() {
                         </Button>
                       )}
                     </Col>
-                    <Col className="pl-1" md="4">
-                      <div className="clearfix"></div>
+                    <Col className="pl-1" md="2">
                     </Col>
                   </Row>
+
+
 
                   {/* <Button block onClick={() => notify("tr","poka")} variant="default">
                     Top Right

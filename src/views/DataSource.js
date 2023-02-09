@@ -37,8 +37,10 @@ import { serverDataExport } from "assets/formulae/RandomSimulation";
 function DataSource() {
   const [server, setServer] = useState(4);
   const [customers, setCustomers] = useState(10);
-  const [IAMean, setIAMean] = useState(2.65);
+  const [fileSource, setFileSource] = useState();
+  // console.log("🚀 ~ file: DataSource.js:41 ~ DataSource ~ fileSource", fileSource)
   const [STMean, setSTMean] = useState(12.45);
+  const [IAMean, setIAMean] = useState(12.45);
 
   const [ShowTable, setShowTable] = useState(false);
   
@@ -89,6 +91,43 @@ function DataSource() {
     return result;
   }
   factorialize(5);
+
+  //!=================================================File upload
+
+  const loadNewFile = (event) => {
+    const file = event;
+    // console.log("🚀 ~ file: DataSource.js:99 ~ handleChange ~ file", file)
+    // ...
+  }
+
+  function readExcelFileData(input) {
+    // Check if a file is selected
+    if (!input.files[0]) return;
+    
+    // Create a FileReader object
+    const reader = new FileReader();
+    
+    // Read the excel file as binary string
+    reader.readAsBinaryString(input.files[0]);
+    
+    // Get the data when the reading is done
+    reader.onload = function() {
+      // Get the binary string
+      const binaryData = reader.result;
+      
+      // Parse the binary string into a workbook
+      const workbook = XLSX.read(binaryData, { type: 'binary' });
+      
+      // Get the first sheet of the workbook
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      
+      // Get the 2d array data from the sheet
+      const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+      
+      // Log the 2d array data
+      console.log(data);
+    }
+  }
 
   //!=================================================Simulation
   // let array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
@@ -289,24 +328,11 @@ function DataSource() {
                         }}
                       ></input>
                     </Col>
-                    <Col className="pr-1" md="2">
-                      <p>No of Customers:</p>
+                   
+                    <Col className="pr-1" md="5">
+                      <p>Select your data file to simulate</p>
 
-                      <Form.Control
-                        placeholder="No of Customers"
-                        type="number"
-                        width="80%"
-                        className="mb-3"
-                        value={customers}
-                        onChange={(e) => {
-                          setCustomers(e.target.value);
-                        }}
-                      ></Form.Control>
-                    </Col>
-                    <Col className="pr-1" md="4">
-                      <p>Mean of Inter Arrival (1/λ) :</p>
-
-                      <Form.Control
+                      {/* <Form.Control
                         placeholder="Mean valueof Inter Arrival (mins)"
                         type="number"
                         width="80%"
@@ -316,7 +342,13 @@ function DataSource() {
                         onChange={(e) => {
                           setIAMean(e.target.value);
                         }}
-                      ></Form.Control>
+                      ></Form.Control> */}
+
+
+        <Form.Control type="file" 
+                        // value={fileSource} 
+                        size="sm" onChange={loadNewFile}/>
+      
                     </Col>
 
                     <Col className="pr-1" md="4">

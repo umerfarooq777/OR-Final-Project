@@ -122,7 +122,7 @@ function RandomNumber() {
     e.preventDefault();
     if (IAMean == "" || STMean == "" || customers == "") {
       notify("tr", "Input fields can't be empty");
-    } if (IAMean<0 || STMean <0 ) {
+    }else if (IAMean<0 || STMean <0 ||customers<0||server<0) {
       notify("tr", "Please, enter value greater than zero");
     } else {
       var lambda = IAMean;
@@ -212,7 +212,7 @@ function RandomNumber() {
       for (let index = 0; index < ans.servers.length; index++) {
 
         let percentage = ans.servers[index]/ans.servers.reduce((a, b) => a + b, 0)*100;
-        serverLabel.push(`Server ${ans.servers.length-index}==> ( `+percentage.toFixed(2)+"% )")
+        serverLabel.push(`Server ${1+index}==> ( `+percentage.toFixed(2)+"% )")
 
         serverParts.push(Number(percentage.toFixed(2)));
         
