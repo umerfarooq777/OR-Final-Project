@@ -19,14 +19,14 @@
   /* background:red; */
 }
 
-///=====================
 
 
 label {
   position: relative;
   display: inline-block;
   margin-top: 80px;
-  &:after {
+  
+  &::after {
     content: '';
     position: absolute;
     display: inline-block;
@@ -42,6 +42,9 @@ label {
     z-index: 2;
     pointer-events: none;
   }
+
+
+
   select {
     position: relative;
     -webkit-appearance: none;
@@ -90,7 +93,7 @@ select {
   font-size:150%;
   font-weight:bold;
   margin:none;
-  self-align:center;
+
   /* background:red */
 }
 .units{

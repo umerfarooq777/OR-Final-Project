@@ -496,7 +496,7 @@ function RandomNumber() {
                     type="Line"
                     options={{
                       low: 0,
-                      high: serverPartsMain.reduce((a, b) => a + b, 0),
+                      high: serverPartsMain.reduce((a, b) => a + b, 0)*1.5,
                       showArea: false,
                       height: "245px",
                       axisX: {
