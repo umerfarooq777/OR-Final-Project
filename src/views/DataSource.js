@@ -521,7 +521,7 @@ function DataSource() {
                     type="Line"
                     options={{
                       low: 0,
-                      high: serverPartsMain.reduce((a, b) => a + b, 0)*3,
+                      high: serverPartsMain.reduce((a, b) => a + b, 0)*15/server,
                       showArea: false,
                       height: "245px",
                       axisX: {
