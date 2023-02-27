@@ -203,9 +203,9 @@ function DataSource() {
       } else {
         
         customerLabel.push(`C${index}`)
-        console.log(data[index][2]) 
-        // IAArray.push(data[index][2])
-        // STArrayIN.push(data[index][3])
+        // console.log(data[index][2]) 
+        IAArray.push(data[index][2])
+        STArrayIN.push(data[index][3])
         
         
       }
