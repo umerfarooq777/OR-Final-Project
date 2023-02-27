@@ -32,44 +32,31 @@ function Introduction() {
               <Card.Body>
                 <div className="typography-line">
                   <p>
-                    {/* <span>Paragraph</span> */}I will be the leader of a
-                    company that ends up being worth billions of dollars,
-                    because I got the answers. I understand culture. I am the
-                    nucleus. I think that’s a responsibility that I have, to
-                    push possibilities, to show people, this is the level that
-                    things could be at.
+                    {/* <span>Paragraph</span> */}
+                    For our final submission of course <b>Operation Research</b>, we have implemented the methods and models taught by our professor <b>Miss Shaista Raees</b>.
                   </p>
                 </div>
                 <div className="typography-line">
                   <p>
-                    {/* <span>Paragraph</span> */}I will be the leader of a
-                    company that ends up being worth billions of dollars,
-                    because I got the answers. I understand culture. I am the
-                    nucleus. I think that’s a responsibility that I have, to
-                    push possibilities, to show people, this is the level that
-                    things could be at.
+                    {/* <span>Paragraph</span> */}
+                    As we all know a simulation is imitation of the operation of real-world process or system over time.
+                    The model we have constructed covers the conceptual framework that describes the behaviour of system evolving over time; designed to investigate the “What if” questions about real-world system.
+                    
                   </p>
                 </div>
                 <div className="typography-line">
                   <p>
-                    {/* <span>Paragraph</span> */}I will be the leader of a
-                    company that ends up being worth billions of dollars,
-                    because I got the answers. I understand culture. I am the
-                    nucleus. I think that’s a responsibility that I have, to
-                    push possibilities, to show people, this is the level that
-                    things could be at.
+                    {/* <span>Paragraph</span> */}
+                    Through this simulation model M/M/1, M/M/C, M/G/1, M/G/C, G/G/1, and G/G/C we are focusing on the restaurant business and how they can be more efficient with their customer dealing. The business or more likely a global chain “Pizza Hut” is are main focus of study.
+                    The data for our model to be able to predict and analyse the future handling was gathered through online resources.
                   </p>
                 </div>
+                
                 <hr></hr>
                 <div className="typography-line">
                   {/* <span>Quote</span> */}
                   <blockquote>
-                    <p className="blockquote blockquote-primary">
-                      "I will be the leader of a company that ends up being
-                      worth billions of dollars, because I got the answers. I
-                      understand culture. I am the nucleus. I think that’s a
-                      responsibility that I have, to push possibilities, to show
-                      people, this is the level that things could be at."{" "}
+                    <p className="blockquote blockquote-primary">.{" "}
                       <br></br>
                       <br></br>
                       {/* <small>- Noaa</small> */}
@@ -93,16 +80,16 @@ function Introduction() {
                   <a href="#pablo" onClick={(e) => e.preventDefault()}>
                     <img
                       alt="..."
-                      className="avatar border-gray"
-                      src={require("assets/img/faces/face-6.jpg")}
+                      className="avatar border-gray bg-light"
+                      src={require("assets/img/faces/miss.png")}
                     ></img>
                     <h5 className="title">Shaista Raees</h5>
                   </a>
                   <p className="description">Incharge | Operational Research</p>
                 </div>
-                <p className="description text-center text-info">
+                {/* <p className="description text-center text-info">
                   "Qoute" <br></br>
-                </p>
+                </p> */}
               </Card.Body>
               <hr></hr>
               <div className="button-container mr-auto ml-auto">

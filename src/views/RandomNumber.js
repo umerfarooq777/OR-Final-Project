@@ -109,7 +109,10 @@ function RandomNumber() {
     return IA;
   };
   const generate_ST = (meu) => {
-    var ST = Math.round(-meu * Math.log(Math.random()));
+    const randomNo = Math.random()
+    // console.log("🚀 ~ file: RandomNumber.js:113 ~ RandomNumber ~ randomNo", randomNo)
+    var ST = Math.round(-meu * Math.log(randomNo));
+    // console.log("🚀 ~ file: RandomNumber.js:115 ~ RandomNumber ~ ST", ST)
     return ST;
   };
 
@@ -128,13 +131,15 @@ function RandomNumber() {
       var lambda = IAMean;
       var minusLambda = IAMean * -1;
       var meu = STMean;
+      var emptyArray = []
       // console.log(server,customers,IAMean,STMean);
 
-      setIAArray([])
-      setSTArray([])
+      setIAArray(emptyArray)
+      setSTArray(emptyArray)
+      setSTArrayIN(emptyArray)
 
-      setTAArray([])
-      setWTArray([])
+      setTAArray(emptyArray)
+      setWTArray(emptyArray)
 
 
       for (let i = 0; i < rows; i++) {
@@ -195,8 +200,8 @@ function RandomNumber() {
       }
       // console.log(table)
       var ans = generate(IAArray,STArrayIN,server);
+      setSTArrayIN([])
       setFinal(ans.customers)
-      
       for (let index = 0; index < ans.customers.length; index++) {
         TAT.push(ans.customers[index].turnaroundTime+1)
         ST.push(ans.customers[index].serviceTime-0.5)

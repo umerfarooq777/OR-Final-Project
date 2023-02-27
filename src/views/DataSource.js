@@ -16,6 +16,9 @@ import {
   Tooltip,
 } from "react-bootstrap";
 
+import Papa from "papaparse";
+import * as XLSX from 'xlsx';
+
 import serverGif from "assets/img/Server.gif";
 import NotificationAlert from "react-notification-alert";
 import { generate } from "assets/formulae/RandomSimulation";
@@ -39,16 +42,16 @@ function DataSource() {
   const [customers, setCustomers] = useState(10);
   const [fileSource, setFileSource] = useState();
   // console.log("🚀 ~ file: DataSource.js:41 ~ DataSource ~ fileSource", fileSource)
-  const [STMean, setSTMean] = useState(12.45);
   const [IAMean, setIAMean] = useState(12.45);
+  const [STMean, setSTMean] = useState(12.45);
 
   const [ShowTable, setShowTable] = useState(false);
   
   const [CustomerIDArray, setCustomerIDArray] = useState([]);
 
+  const [STArrayIN, setSTArrayIN] = useState([]);
   const [IAArray, setIAArray] = useState([]);
   // console.log("🚀 ~ file: DataSource.js:42 ~ DataSource ~ IAArray", IAArray)
-  const [STArrayIN, setSTArrayIN] = useState([]);
   const [STArray, setSTArray] = useState([]);
   // console.log("🚀 ~ file: DataSource.js:44 ~ DataSource ~ STArray", STArray)
   const [TAArray, setTAArray] = useState([]);
@@ -94,40 +97,59 @@ function DataSource() {
 
   //!=================================================File upload
 
-  const loadNewFile = (event) => {
-    const file = event;
-    // console.log("🚀 ~ file: DataSource.js:99 ~ handleChange ~ file", file)
-    // ...
+  const [data, setData] = useState([]);
+
+  function hasNull(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] === null) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  function readExcelFileData(input) {
-    // Check if a file is selected
-    if (!input.files[0]) return;
-    
-    // Create a FileReader object
+  function handleFile(e) {
+    const file = e.target.files[0];
+    // console.log("🚀 ~ file: DataSource.js:113 ~ handleFile ~ file", file.name)
     const reader = new FileReader();
-    
-    // Read the excel file as binary string
-    reader.readAsBinaryString(input.files[0]);
-    
-    // Get the data when the reading is done
-    reader.onload = function() {
-      // Get the binary string
-      const binaryData = reader.result;
-      
-      // Parse the binary string into a workbook
-      const workbook = XLSX.read(binaryData, { type: 'binary' });
-      
-      // Get the first sheet of the workbook
-      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-      
-      // Get the 2d array data from the sheet
-      const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-      
-      // Log the 2d array data
-      console.log(data);
-    }
+    reader.onload = (e) => {
+      const workbook = XLSX.read(e.target.result, { type: 'binary' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+      const rows = [];
+      for (let rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
+        const row = [];
+        for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
+          const cellAddress = XLSX.utils.encode_cell({ r: rowNum, c: colNum });
+          const cell = worksheet[cellAddress];
+          const cellValue = cell ? cell.v : null;
+          row.push(cellValue);
+        }
+
+        // rows.push(hasNull(row));
+        
+        if ( hasNull(row)) {
+          
+        } else {
+          rows.push(row);
+          
+        }
+       
+      }
+      // console.log(rows.length+1)
+      setData(rows);
+    };
+    reader.readAsBinaryString(file);
+
+   
+
+
+ 
   }
+  // console.log(IAArray,STArrayIN)
+
+  
 
   //!=================================================Simulation
   // let array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
@@ -159,80 +181,47 @@ function DataSource() {
 
   const Calculate1 = (e) => {
     e.preventDefault();
-    if (IAMean == "" || STMean == "" || customers == "") {
-      notify("tr", "Input fields can't be empty");
-    } if (IAMean<0 || STMean <0 ) {
-      notify("tr", "Please, enter value greater than zero");
+    if (server<=0 || server>10) {
+      notify("tr", "Severs must be 1 to 10");
     } else {
-      var lambda = IAMean;
-      var minusLambda = IAMean * -1;
-      var meu = STMean;
+     
+
+
       // console.log(server,customers,IAMean,STMean);
 
       setIAArray([])
       setSTArray([])
-
+      setSTArrayIN([])
       setTAArray([])
       setWTArray([])
+      customerLabel = []
 
+         for (let index = 0; index < data.length; index++) {
 
-      for (let i = 0; i < rows; i++) {
-        customerLabel.push(`C${i+1}`)
-        table[i] = [];
-
-        //?================================================= Col 1 Calculator Values
-        table[i][0] = Column1Cal(eConts, minusLambda, lambda, i);
-
-        //?================================================= Col 2 Cummulative Probability
-        if (i == 0) {
-          table[i][1] = table[i][0];
-        } else {
-          table[i][1] = table[i - 1][1] + table[i][0];
-          //current value = [pre row value + pre col] , [current row value]
-        }
-        //?================================================= Col 3 Lookup Probability
-
-        if (i == 0) {
-          table[i][2] = 0;
-        } else {
-          table[i][2] = table[i - 1][1];
-          //current value = [pre row value + pre col] , [current row value]
-        }
-        //?================================================= Col 4 no b/w arrival
-
-        table[i][3] = i;
-
-        //?================================================= Col 5 range 1
-        if (i == 0) {
-          table[i][4] = table[i][2];
-        } else {
-          table[i][4] = table[i][2] + 0.0001;
-        }
-
-        //?================================================= Col 6 range 2
-
-        table[i][5] = table[i][1];
-
-        //?================================================= Col 7 Inter Arrival
-
-        table[i][6] = Math.floor(generate_IA(rows));
-        IAArray.push(table[i][6])
-
-        //?================================================= Col 8 Arrival
-        if (i == 0) {
-          table[i][7] = table[i][6];
-        } else {
-          table[i][7] = Math.floor(table[i][6] + table[i - 1][7]);
-        }
-
-        //?================================================= Col 9 Service Time
-        table[i][8] = generate_ST(meu);
-        STArrayIN.push(table[i][8])
-        // for (let j = 0; j < columns; j++) {
-        //   table[i][j] = 0;
-        // }
+      if (index==0) {
+        
+      } else {
+        
+        customerLabel.push(`C${index}`)
+        console.log(data[index][2]) 
+        // IAArray.push(data[index][2])
+        // STArrayIN.push(data[index][3])
+        
+        
       }
-      // console.log(table)
+      
+      
+    }
+    // console.log("================ I", IAArray)
+    // console.log("================ S", STArrayIN)
+    
+    setIAMean((IAArray.reduce((acc, curr) => acc + curr, 0)/data.length-1).toFixed(2))
+    setSTMean((STArrayIN.reduce((acc, curr) => acc + curr, 0)/data.length-1).toFixed(2))
+    // console.log("================", IAArray.reduce((acc, curr) => acc + curr, 0))
+    // console.log("================", STArrayIN.reduce((acc, curr) => acc + curr, 0))
+
+      
+     
       var ans = generate(IAArray,STArrayIN,server);
       setFinal(ans.customers)
       
@@ -313,7 +302,7 @@ function DataSource() {
                   {/* /====================ROW 1/ */}
 
                   <Row>
-                    <Col className="pr-1 typography-line" md="2">
+                    <Col className="pr-1 typography-line" md="3">
                       <p className="">
                         {" "}
                         <i className="nc-icon nc-layers-3 "></i> Server(s)
@@ -328,8 +317,8 @@ function DataSource() {
                         }}
                       ></input>
                     </Col>
-                   
-                    <Col className="pr-1" md="5">
+                {/* =============================================================================Data Source */}
+                    <Col className="pr-1" md="8">
                       <p>Select your data file to simulate</p>
 
                       {/* <Form.Control
@@ -345,13 +334,14 @@ function DataSource() {
                       ></Form.Control> */}
 
 
-        <Form.Control type="file" 
-                        // value={fileSource} 
-                        size="sm" onChange={loadNewFile}/>
+                        <Form.Control 
+                        type="file" 
+                        size="md" onChange={handleFile}/>
       
                     </Col>
+                    {/* {data && <pre>{JSON.stringify(data, null, 2)}</pre>} */}
 
-                    <Col className="pr-1" md="4">
+                    {/* <Col className="pr-1" md="4">
                       <p>Mean of Service Time (1/µ) :</p>
 
                       <Form.Control
@@ -365,7 +355,7 @@ function DataSource() {
                           setSTMean(e.target.value);
                         }}
                       ></Form.Control>
-                    </Col>
+                    </Col> */}
 
                     {/* <Col className="px-1" md="7">
                       <Row>
@@ -382,16 +372,17 @@ function DataSource() {
                   {/* /====================ROW 2/ */}
 
                   <Row>
-                    <Col className="pl-1" md="4"></Col>
+                  <Col className="pl-1" md="4"> 
+                 </Col>
                     <Col className="pl-1" md="4">
-                      {IAMean == "" || STMean == "" || customers == "" ? (
+                      {data.length<=0 ? (
                         <Button
                           className="btn-fill pull-right"
                           type="submit"
                           variant="info"
                           disabled
                         >
-                          Simulate
+                          Upload the data sample file
                         </Button>
                       ) : (<>
                         <Button
@@ -402,7 +393,7 @@ function DataSource() {
                             Calculate1(e);
                           }}
                         >
-                          Simulate
+                          Start Simulation
                         </Button>
                        
                         </>
@@ -492,6 +483,8 @@ function DataSource() {
               <Card.Header>
                 <Card.Title as="h4">Customer Data Analytics :</Card.Title>
                 <p className="card-category">Queue Behaviour</p>
+                <p className="card-category">Inter Arrival Mean : {IAMean} </p>
+                <p className="card-category">Service Time Mean : {STMean} </p>
               </Card.Header>
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
@@ -528,7 +521,7 @@ function DataSource() {
                     type="Line"
                     options={{
                       low: 0,
-                      high: serverPartsMain.reduce((a, b) => a + b, 0),
+                      high: serverPartsMain.reduce((a, b) => a + b, 0)*3,
                       showArea: false,
                       height: "245px",
                       axisX: {

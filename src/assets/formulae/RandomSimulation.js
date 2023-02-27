@@ -25,6 +25,7 @@ const calculateArrivalsFromInterArrivals = (interArrivals) => {
 };
 
 export const generate = (interArrivals, serviceTimes, numberOfServers) => {
+  // console.log("🚀 ~ file: RandomSimulation.js:28 ~ generate ~ serviceTimes", serviceTimes)
   const arrivals = calculateArrivalsFromInterArrivals(interArrivals);
 //   console.log(numberOfServers);
   var servers = []

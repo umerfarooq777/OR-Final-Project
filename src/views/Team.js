@@ -52,11 +52,11 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-8.jpg")}
+                      src={require("assets/img/faces/face-11.JPG")}
                     ></img>
-                    <h5 className="title">Umer Farooq</h5>
+                    <h5 className="title">Haris Ali</h5>
                   </a>
-                  <p className="description">EB 19***136</p>
+                  <p className="description">EB 19***033</p>
                 </div>
                 {/* <p className="description text-center">
                   "Lamborghini Mercy <br></br>
@@ -106,11 +106,11 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/faces/face-9.jpg")}
                     ></img>
-                    <h5 className="title">Umer Farooq</h5>
+                    <h5 className="title">Tatheer Fatima</h5>
                   </a>
-                  <p className="description">EB 19***136</p>
+                  <p className="description">EB 19***135</p>
                 </div>
                 {/* <p className="description text-center">
                   "Lamborghini Mercy <br></br>
@@ -160,11 +160,11 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/faces/alipng.png")}
                     ></img>
-                    <h5 className="title">Umer Farooq</h5>
+                    <h5 className="title">Ali Umair</h5>
                   </a>
-                  <p className="description">EB 19***136</p>
+                  <p className="description">EB 19***013</p>
                 </div>
                 {/* <p className="description text-center">
                   "Lamborghini Mercy <br></br>
@@ -219,11 +219,11 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/faces/face-12.jpg")}
                     ></img>
-                    <h5 className="title">Umer Farooq</h5>
+                    <h5 className="title">Abdul Hai Khan</h5>
                   </a>
-                  <p className="description">EB 19***136</p>
+                  <p className="description">EB 19***003</p>
                 </div>
                 {/* <p className="description text-center">
                   "Lamborghini Mercy <br></br>
@@ -275,7 +275,7 @@ function Team() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/faces/face-8.jpg")}
                     ></img>
                     <h5 className="title">Umer Farooq</h5>
                   </a>
